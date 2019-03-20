@@ -31,16 +31,21 @@ def ApplyFilter(img, filter):
     matchingMap = matchingMap[:,:] / matchingMap.max()
 
     filteredd = matchingMap.copy()
+    img2 = cv2.imread("img2.png", -1)
+    color = [0, 255, 0]
     for i in range(0, rows - ksizex):
         for j in range(0, cols - ksizey):
             if filteredd[i, j] < 0.1:
-                matchingMap[i : i + ksizex, j] = 0
-                matchingMap[i : i + ksizex, j + ksizey] = 0
-                matchingMap[i, j : j + ksizey] = 0
-                matchingMap[i + ksizex, j : j + ksizey] = 0
+                for k in range(0,3):
+                    img2[i : i + ksizex, j, k] = color[k]
+                    img2[i : i + ksizex, j + ksizey, k] = color[k]
+                    img2[i, j : j + ksizey, k] = color[k]
+                    img2[i + ksizex, j : j + ksizey, k] = color[k]
+
     # Show the image
     matchingMap = matchingMap[:, :] * 255
     cv2.imshow("matchingMap", np.uint8(matchingMap))
+    cv2.imshow("Tu", np.uint8(img2))
     cv2.imwrite("match.png", np.uint8(matchingMap))
     return np.uint8(matchingMap)
 
