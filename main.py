@@ -38,11 +38,7 @@ def ApplyFilter(img, filter, threshold, image):
         for j in range(0, y):
             if filteredd[i, j] < threshold:
                 found = True
-                for k in range(0, 3):
-                    img2[i: i + ksizex - 1, j, k] = color[k]
-                    img2[i: i + ksizex - 1, j + ksizey - 1, k] = color[k]
-                    img2[i, j: j + ksizey - 1, k] = color[k]
-                    img2[i + ksizex - 1, j: j + ksizey - 1, k] = color[k]
+                cv2.rectangle(img2, (j - 1, i - 1), (j + ksizex, i + ksizey), [0, 255, 0], 1)
 
     # Show the image
     matchingMap = matchingMap[:, :] * 255
