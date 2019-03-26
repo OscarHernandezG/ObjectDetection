@@ -3,40 +3,27 @@ import cv2
 
 
 def ApplyFilter(img, filter, threshold, image):
-    rows, cols = img.shape
 
     img = img[:, :] / 255
     filter = filter[:, :] / 255
 
-    kernel = np.array(filter)
-    ksizex, ksizey = kernel.shape
-    kradix = int(ksizex / 2)
-    kradiy = int(ksizey / 2)
+    ksizex, ksizey = filter.shape
 
-    # Create a copy with black padding
-    pRow = int(rows + 2 * kradix)
-    pCol = int(cols + 2 * kradiy)
-    imgpadding = np.zeros((pRow, pCol, 1))
-    imgpadding[kradix:-kradix, kradiy:-kradiy, 0] = img
-
-    x = img.shape[0] - filter.shape[0] + 1
-    y = img.shape[1] - filter.shape[1] + 1
+    x = img.shape[0] - ksizex + 1
+    y = img.shape[1] - ksizey + 1
     matchingMap = np.zeros((x, y))
     for i in range(0, x):
         for j in range(0, y):
             local = img[i:i + ksizex, j:j + ksizey]
-            # if local.shape[0] == ksizex and local.shape[1] == ksizey:
             matchingMap[i, j] = np.sum((filter[:, :] - local[:, :]) ** 2)
 
     matchingMap = matchingMap[:, :] / matchingMap.max()
 
-    filteredd = matchingMap.copy()
     img2 = cv2.imread(image, -1)
-    color = [0, 255, 0]
-    found = False;
+    found = False
     for i in range(0, x):
         for j in range(0, y):
-            if filteredd[i, j] < threshold:
+            if matchingMap[i, j] < threshold:
                 found = True
                 cv2.rectangle(img2, (j - 1, i - 1), (j + ksizex, i + ksizey), [0, 255, 0], 1)
 
