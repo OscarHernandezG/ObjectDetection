@@ -19,11 +19,11 @@ def ApplyFilter(img, filter, threshold, image):
     imgpadding = np.zeros((pRow, pCol, 1))
     imgpadding[kradix:-kradix, kradiy:-kradiy, 0] = img
 
-    # Convolution
-    matchingMap = np.array(img)
-    filtered = np.zeros(img.shape)
-    for i in range(0, rows - ksizex + 1):
-        for j in range(0, cols - ksizey + 1):
+    x = img.shape[0] - filter.shape[0] + 1
+    y = img.shape[1] - filter.shape[1] + 1
+    matchingMap = np.zeros((x, y))
+    for i in range(0, x):
+        for j in range(0, y):
             local = img[i:i + ksizex, j:j + ksizey]
             # if local.shape[0] == ksizex and local.shape[1] == ksizey:
             matchingMap[i, j] = np.sum((filter[:, :] - local[:, :]) ** 2)
@@ -34,8 +34,8 @@ def ApplyFilter(img, filter, threshold, image):
     img2 = cv2.imread(image, -1)
     color = [0, 255, 0]
     found = False;
-    for i in range(0, rows - ksizex + 1):
-        for j in range(0, cols - ksizey + 1):
+    for i in range(0, x):
+        for j in range(0, y):
             if filteredd[i, j] < threshold:
                 found = True
                 for k in range(0, 3):
